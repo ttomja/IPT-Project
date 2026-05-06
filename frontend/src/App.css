@@ -1,0 +1,51 @@
+.app-shell {
+  min-height: 100vh;
+  padding: 40px;
+  background: #f3f6fb;
+  font-family: Arial, sans-serif;
+  color: #1f2937;
+}
+
+.hero-card {
+  max-width: 900px;
+  margin: 0 auto 24px auto;
+  padding: 28px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.eyebrow {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: #2f5597;
+  text-transform: uppercase;
+}
+
+.hero-card h1 {
+  margin: 0 0 12px 0;
+}
+
+.module-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.module-card {
+  padding: 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #d9e2f3;
+  font-weight: bold;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
