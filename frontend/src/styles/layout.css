@@ -1,28 +1,51 @@
-/* src/styles/layout.css */
-.app-shell {
+.app-layout {
   min-height: 100vh;
-  background: #f5f7fb;
+  display: flex;
+  background: #f3f6fb;
 }
-
-.app-header {
-  background: #2f5597;
+.sidebar {
+  width: 240px;
+  background: #1f3b73;
   color: white;
-  padding: 16px 24px;
+  padding: 24px 18px;
 }
-
-.app-header h2 { margin: 0; }
-
-.app-content { padding: 24px; }
-
-.page-header { margin-bottom: 16px; }
-.page-header h1 { margin: 0 0 4px; color: #2f5597; }
-.page-header p { margin: 0; color: #555; }
-
-.placeholder-card, .empty-state, .message {
-  background: white;
-  border: 1px solid #d9e2ef;
+.sidebar h2 {
+  margin: 0 0 12px;
+}
+.sidebar-user {
+  margin: 0;
+  font-weight: bold;
+}
+.sidebar-role {
+  margin: 4px 0 22px;
+  color: #dbe7ff;
+  font-size: 14px;
+}
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
   border-radius: 8px;
-  padding: 16px;
 }
-
-.error-message { color: #b42318; background: #fff3f0; }
+.sidebar a:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.logout-button {
+  width: 100%;
+  margin-top: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #f04438;
+  color: white;
+  cursor: pointer;
+}
+.main-content {
+  flex: 1;
+  padding: 28px;
+}

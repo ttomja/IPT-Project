@@ -1,27 +1,21 @@
-// src/api/axiosClient.js
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api",
-  timeout: 10000,
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
   },
+  timeout: 10000
 });
 
-axiosClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      "Request failed. Please try again.";
-
-    return Promise.reject({
-      ...error,
-      userMessage: message,
-    });
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("ims_token");
+  
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  
+  return config;
+});
 
 export default axiosClient;

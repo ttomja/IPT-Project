@@ -1,12 +1,13 @@
-// src/layouts/MainLayout.js
+import RoleBasedNavigation from "../components/RoleBasedNavigation";
+import "../styles/layout.css";
+
 function MainLayout({ children }) {
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <h2>Inventory Management System</h2>
-      </header>
-      <main className="app-content">{children}</main>
+    <div className="app-layout">
+      <RoleBasedNavigation />
+      <main className="main-content">{children}</main>
     </div>
   );
 }
+
 export default MainLayout;
