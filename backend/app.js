@@ -11,8 +11,8 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  credentials: true,
 }));
 
 app.use(express.json());
@@ -25,9 +25,8 @@ app.get("/", (req, res) => {
 
 app.get("/api/health", (req, res) => {
   res.json({
-    status: "ok",
-    message: "Backend server is running",
-    project: "Inventory Management System"
+    status: "OK",
+    message: "Inventory Management System API is running",
   });
 });
 
