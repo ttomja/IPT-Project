@@ -3,8 +3,8 @@ import PageHeader from "../components/PageHeader";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
-import { getProducts } from "../api/productService";
-import { recordStockIn } from "../api/stockService";
+import { getProducts } from "../api/productsApi";
+import { recordStockIn } from "../api/stockApi";
 function StockInPage() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ productId: "", quantity: "", remarks: "" });
@@ -12,18 +12,19 @@ function StockInPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        setLoading(true);
-        const data = await getProducts();
-        setProducts(data);
-      } catch (err) {
-        setError("Unable to load products for stock-in.");
-      } finally {
-        setLoading(false);
-      }
+  async function loadProducts() {
+    try {
+      setLoading(true);
+      const response = await getProducts();
+      setProducts(response.data);
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to load products for stock-in.");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadProducts();
   }, []);
   function handleChange(event) {
@@ -53,8 +54,9 @@ function StockInPage() {
       });
       setSuccess("Stock-in transaction recorded successfully.");
       setForm({ productId: "", quantity: "", remarks: "" });
+      await loadProducts();
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to record stock-in transaction.");
+      setError(err.friendlyMessage || "Unable to record stock-in transaction.");
     } finally {
       setSaving(false);
     }

@@ -1,27 +1,36 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import ErrorMessage from "../components/ErrorMessage";
-import { getCurrentInventoryReport, getLowStockReport, getStockInReport, getStockOutReport } from "../api/reportService";
+import LoadingMessage from "../components/LoadingMessage";
+import EmptyState from "../components/EmptyState";
+import { getInventoryReport, getLowStockReport, getStockInReport, getStockOutReport } from "../api/reportsApi";
+
 function ReportsPage() {
   const [activeReport, setActiveReport] = useState("inventory");
   const [rows, setRows] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     async function loadReport() {
       try {
+        setLoading(true);
         setError("");
-        let data = [];
-        if (activeReport === "inventory") data = await getCurrentInventoryReport();
-        if (activeReport === "low-stock") data = await getLowStockReport();
-        if (activeReport === "stock-in") data = await getStockInReport();
-        if (activeReport === "stock-out") data = await getStockOutReport();
-        setRows(data);
+        let response = { data: [] };
+        if (activeReport === "inventory") response = await getInventoryReport();
+        if (activeReport === "low-stock") response = await getLowStockReport();
+        if (activeReport === "stock-in") response = await getStockInReport();
+        if (activeReport === "stock-out") response = await getStockOutReport();
+        setRows(response.data);
       } catch (err) {
-        setError("Unable to load selected report.");
+        setError(err.friendlyMessage || "Unable to load selected report.");
+      } finally {
+        setLoading(false);
       }
     }
     loadReport();
   }, [activeReport]);
+
   function renderInventoryRows() {
     return rows.map((product) => (
       <tr key={product._id}>
@@ -56,31 +65,36 @@ function ReportsPage() {
         <button onClick={() => setActiveReport("stock-in")}>Stock-In</button>
         <button onClick={() => setActiveReport("stock-out")}>Stock-Out</button>
       </div>
+      {loading && <LoadingMessage message="Loading report..." />}
       {error && <ErrorMessage message={error} />}
-      <table className="data-table">
-        <thead>
-          {isProductReport ? (
-            <tr>
-              <th>Code</th>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Qty</th>
-              <th>Reorder</th>
-              <th>Status</th>
-            </tr>
-          ) : (
-            <tr>
-              <th>Date</th>
-              <th>Product</th>
-              <th>Type</th>
-              <th>Qty</th>
-              <th>Previous</th>
-              <th>New</th>
-            </tr>
-          )}
-        </thead>
-        <tbody>{isProductReport ? renderInventoryRows() : renderTransactionRows()}</tbody>
-      </table>
+      {!loading && rows.length === 0 ? (
+        <EmptyState message="No records found for this report." />
+      ) : (
+        <table className="data-table">
+          <thead>
+            {isProductReport ? (
+              <tr>
+                <th>Code</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Reorder</th>
+                <th>Status</th>
+              </tr>
+            ) : (
+              <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>Type</th>
+                <th>Qty</th>
+                <th>Previous</th>
+                <th>New</th>
+              </tr>
+            )}
+          </thead>
+          <tbody>{isProductReport ? renderInventoryRows() : renderTransactionRows()}</tbody>
+        </table>
+      )}
     </div>
   );
 }

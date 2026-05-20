@@ -3,7 +3,7 @@ import PageHeader from "../components/PageHeader";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import EmptyState from "../components/EmptyState";
-import { getTransactions } from "../api/stockService";
+import { getTransactions } from "../api/stockApi";
 function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState("All");
@@ -13,10 +13,10 @@ function TransactionsPage() {
     async function loadTransactions() {
       try {
         setLoading(true);
-        const data = await getTransactions();
-        setTransactions(data);
+        const response = await getTransactions();
+        setTransactions(response.data);
       } catch (err) {
-        setError("Unable to load transaction history.");
+        setError(err.friendlyMessage || "Unable to load transaction history.");
       } finally {
         setLoading(false);
       }

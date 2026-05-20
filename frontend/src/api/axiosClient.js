@@ -14,4 +14,16 @@ axiosClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message = error.response?.data?.message || error.message || "Something went wrong. Please try again.";
+    return Promise.reject({
+      ...error,
+      friendlyMessage: message,
+    });
+  }
+);
+
 export default axiosClient;

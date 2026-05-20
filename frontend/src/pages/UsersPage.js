@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import EmptyState from "../components/EmptyState";
-import { getUsers } from "../api/userService";
+import { getUsers, createUser, updateUser, deactivateUser } from "../api/usersApi";
 import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
+import SuccessMessage from "../components/SuccessMessage";
+import StatusBadge from "../components/StatusBadge";
+
 function UsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     username: "",
@@ -15,47 +19,55 @@ function UsersPage() {
     role: "Staff",
   });
   const [editingId, setEditingId] = useState(null);
-  useEffect(() => {
-    async function loadUsers() {
-      try {
-        setLoading(true);
-        const data = await getUsers();
-        setUsers(data);
-      } catch (err) {
-        setError("Unable to load users.");
-      } finally {
-        setLoading(false);
-      }
+  async function loadUsers() {
+    try {
+      setLoading(true);
+      const response = await getUsers();
+      setUsers(response.data);
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to load users.");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadUsers();
   }, []);
   function handleChange(event) {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
   }
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (!form.fullName || !form.username) {
-      alert("Full name and username are required.");
+      setError("Full name and username are required.");
       return;
     }
-    if (editingId) {
-      setUsers(users.map((user) =>
-        user.id === editingId ? { ...user, ...form } : user
-      ));
-      setEditingId(null);
-    } else {
-      const newUser = {
-        id: Date.now().toString(),
-        ...form,
-        status: "Active",
-  };
-      setUsers([...users, newUser]);
+    try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+      
+      if (editingId) {
+        await updateUser(editingId, form);
+        setSuccess("User updated successfully.");
+        setEditingId(null);
+      } else {
+        await createUser(form);
+        setSuccess("User created successfully.");
+      }
+      
+      setForm({ fullName: "", username: "", password: "", role: "Staff" });
+      await loadUsers();
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to save user.");
+    } finally {
+      setLoading(false);
     }
-    setForm({ fullName: "", username: "", password: "", role: "Staff" });
   }
   function handleEdit(user) {
-    setEditingId(user.id);
+    setEditingId(user._id);
     setForm({
       fullName: user.fullName,
       username: user.username,
@@ -63,10 +75,20 @@ function UsersPage() {
       role: user.role,
     });
   }
-  function handleDeactivate(id) {
-    setUsers(users.map((user) =>
-      user.id === id ? { ...user, status: "Inactive" } : user
-    ));
+  async function handleDeactivate(id) {
+    if (!window.confirm("Are you sure you want to deactivate this user?")) return;
+    try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+      await deactivateUser(id);
+      setSuccess("User deactivated.");
+      await loadUsers();
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to deactivate user.");
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <div>
@@ -76,6 +98,7 @@ function UsersPage() {
       />
       {loading && <LoadingMessage message="Loading users..." />}
       {error && <ErrorMessage message={error} />}
+      {success && <SuccessMessage message={success} />}
       <form className="form-card" onSubmit={handleSubmit}>
         <input
           name="fullName"
@@ -117,15 +140,16 @@ function UsersPage() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user._id}>
                 <td>{user.fullName}</td>
                 <td>{user.username}</td>
                 <td>{user.role}</td>
-                <td>{user.status}</td>
+                <td><StatusBadge status={user.status} /></td>
                 <td>
-                  <button onClick={() => handleEdit(user)}>Edit</button>
-                  <button onClick={() =>
-                    handleDeactivate(user.id)}>Deactivate</button>
+                  <button className="btn-edit" onClick={() => handleEdit(user)}>Edit</button>
+                  {user.status === "Active" && (
+                    <button className="btn-danger" onClick={() => handleDeactivate(user._id)}>Deactivate</button>
+                  )}
                 </td>
               </tr>
             ))}

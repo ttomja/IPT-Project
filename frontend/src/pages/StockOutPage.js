@@ -2,19 +2,31 @@ import { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
-import { getProducts } from "../api/productService";
-import { recordStockOut } from "../api/stockService";
+import LoadingMessage from "../components/LoadingMessage";
+import { getProducts } from "../api/productsApi";
+import { recordStockOut } from "../api/stockApi";
+
 function StockOutPage() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ productId: "", quantity: "", remarks: "" });
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  useEffect(() => {
-    async function loadProducts() {
-      const data = await getProducts();
-      setProducts(data);
+
+  async function loadProducts() {
+    try {
+      setLoading(true);
+      const response = await getProducts();
+      setProducts(response.data);
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to load products.");
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadProducts();
   }, []);
   const selectedProduct = products.find((product) => product._id === form.productId);
@@ -48,10 +60,9 @@ function StockOutPage() {
       });
       setSuccess("Stock-out transaction recorded successfully.");
       setForm({ productId: "", quantity: "", remarks: "" });
-      const updatedProducts = await getProducts();
-      setProducts(updatedProducts);
+      await loadProducts();
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to record stock-out transaction.");
+      setError(err.friendlyMessage || "Unable to record stock-out transaction.");
     } finally {
       setSaving(false);
     }
@@ -59,6 +70,7 @@ function StockOutPage() {
   return (
     <div>
       <PageHeader title="Stock-Out" subtitle="Record outgoing product quantity" />
+      {loading && <LoadingMessage message="Loading products..." />}
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
       <form className="form-card" onSubmit={handleSubmit}>
