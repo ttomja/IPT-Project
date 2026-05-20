@@ -22,6 +22,9 @@ app.get("/api/health", (req, res) => {
   res.json({ message: "Inventory Management System API is running" });
 });
 
+const setupSwagger = require("./swagger/swagger");
+setupSwagger(app);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
