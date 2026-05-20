@@ -1,46 +1,39 @@
 const mongoose = require("mongoose");
-
 const stockTransactionSchema = new mongoose.Schema(
   {
-    product: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
-      required: true
+      required: true,
     },
     transactionType: {
       type: String,
       enum: ["Stock In", "Stock Out"],
-      required: true
+      required: true,
     },
     quantity: {
       type: Number,
       required: true,
-      min: [1, "Quantity must be at least 1."]
+      min: 1,
     },
     previousQuantity: {
       type: Number,
       required: true,
-      min: 0
     },
     newQuantity: {
       type: Number,
       required: true,
-      min: 0
     },
     processedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
     remarks: {
       type: String,
-      trim: true,
-      default: ""
-    }
+      default: "",
+    },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
-
 module.exports = mongoose.model("StockTransaction", stockTransactionSchema);

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  temporaryLoginUser,
-  saveSession
-} from "../services/authService";
+import { loginUser } from "../api/authService";
+import { saveSession } from "../utils/auth";
 import "../styles/login.css";
 
 function LoginPage() {
@@ -43,18 +41,14 @@ function LoginPage() {
     }
     try {
       setLoading(true);
-      const result = await temporaryLoginUser(
-        formData.username,
-        formData.password
-      );
-      saveSession(result.token, result.user);
-      if (result.user.role === "Admin") {
-        navigate("/admin");
-      } else {
-        navigate("/staff");
-      }
+      const data = await loginUser(formData);
+      saveSession({
+        token: data.token,
+        user: data.user,
+      });
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      setError(err.response?.data?.message || "Invalid username or password.");
     } finally {
       setLoading(false);
     }

@@ -1,39 +1,35 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-
-dotenv.config();
-connectDB();
+const categoryRoutes = require("./routes/categoryRoutes");
+const productRoutes = require("./routes/productRoutes");
+const stockRoutes = require("./routes/stockRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
+connectDB();
 
 app.use(cors({
   origin: process.env.CLIENT_URL || "http://localhost:3000",
-  credentials: true
+  credentials: true,
 }));
-
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Inventory Management System API is running.");
-});
-
 app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    message: "Backend server is healthy."
-  });
+  res.json({ message: "Inventory Management System API is running" });
 });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/stock", stockRoutes);
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

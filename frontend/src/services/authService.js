@@ -4,7 +4,7 @@ export const temporaryLoginUser = async (username, password) => {
       if (username === "admin" && password === "admin123") {
         resolve({
           token: "fake-admin-token",
-          user: { fullName: "Admin User", username: "admin", role: "Admin" }
+          user: { fullName: "Admin User", username: "admin", role: "Administrator" }
         });
       } else if (username === "staff" && password === "staff123") {
         resolve({

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
 const generateToken = (userId) => {
@@ -18,15 +19,15 @@ exports.login = async (req, res) => {
     }
 
     const user = await User.findOne({
-      username: username.toLowerCase(),
-      accountStatus: "Active"
-    }).select("+password");
+      username: username,
+      status: "Active"
+    });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid username or password." });
     }
 
-    const passwordMatches = await user.matchPassword(password);
+    const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
       return res.status(401).json({ message: "Invalid username or password." });
@@ -41,7 +42,7 @@ exports.login = async (req, res) => {
         fullName: user.fullName,
         username: user.username,
         role: user.role,
-        accountStatus: user.accountStatus
+        status: user.status
       }
     });
   } catch (error) {
@@ -56,7 +57,7 @@ exports.getMe = async (req, res) => {
       fullName: req.user.fullName,
       username: req.user.username,
       role: req.user.role,
-      accountStatus: req.user.accountStatus
+      status: req.user.status
     }
   });
 };
