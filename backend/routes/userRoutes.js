@@ -5,12 +5,11 @@ const {
   updateUser,
   deactivateUser,
 } = require("../controllers/userController");
-const { protect } = require("../middleware/authMiddleware");
-const { authorizeRoles } = require("../middleware/roleMiddleware");
+const { protect, adminOnly } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.use(protect);
-router.use(authorizeRoles("Administrator"));
+router.use(adminOnly);
 router.get("/", getUsers);
 router.post("/", createUser);
 router.put("/:id", updateUser);

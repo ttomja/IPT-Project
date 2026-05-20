@@ -18,4 +18,10 @@ async function protect(req, res, next) {
     res.status(401).json({ message: "Not authorized. Token invalid." });
   }
 }
-module.exports = { protect };
+const adminOnly = (req, res, next) => {
+  if (req.user?.role !== "Administrator") {
+    return res.status(403).json({ message: "Access denied. Administrator only." });
+  }
+  next();
+};
+module.exports = { protect, adminOnly };

@@ -40,18 +40,15 @@ async function stockOut(req, res) {
   try {
     const { productId, quantity, remarks } = req.body;
     const qty = Number(quantity);
-    if (!productId) {
-      return res.status(400).json({ message: "Product is required." });
-    }
-    if (!Number.isFinite(qty) || qty <= 0) {
-      return res.status(400).json({ message: "Quantity must be greater than 0." });
+    if (!productId || !qty || qty <= 0) {
+      return res.status(400).json({ message: "Product and valid quantity are required." });
     }
     const product = await Product.findById(productId);
     if (!product || product.status !== "Active") {
       return res.status(404).json({ message: "Active product not found." });
     }
-    if (product.quantityInStock < qty) {
-      return res.status(400).json({ message: "Insufficient stock available." });
+    if (qty > product.quantityInStock) {
+      return res.status(400).json({ message: "Stock-out quantity cannot exceed available stock." });
     }
     const previousQuantity = product.quantityInStock;
     const newQuantity = previousQuantity - qty;
@@ -67,12 +64,11 @@ async function stockOut(req, res) {
       remarks,
     });
     res.status(201).json({
-      message: "Stock-out recorded successfully.",
-      transaction,
-      product
+      message: "Stock-out transaction recorded successfully.",
+      data: transaction,
     });
   } catch (error) {
-    res.status(500).json({ message: "Unable to record stock-out.", error: error.message });
+    res.status(500).json({ message: "Server error while recording stock-out." });
   }
 }
 async function getTransactions(req, res) {

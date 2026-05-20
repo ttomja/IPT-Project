@@ -21,7 +21,7 @@ function ReportsPage() {
         if (activeReport === "low-stock") response = await getLowStockReport();
         if (activeReport === "stock-in") response = await getStockInReport();
         if (activeReport === "stock-out") response = await getStockOutReport();
-        setRows(response.data);
+        setRows(response.data.data || response.data);
       } catch (err) {
         setError(err.friendlyMessage || "Unable to load selected report.");
       } finally {

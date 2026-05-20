@@ -56,6 +56,8 @@ body {
   transform: translateY(-2px);
 }
 .dashboard-card .card-title {
+  display: flex;
+  align-items: center;
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
@@ -75,11 +77,19 @@ body {
   margin: 0;
 }
 
-/* Card color accents via nth-child */
-.dashboard-card:nth-child(1) { border-top: 3px solid #3182ce; }
-.dashboard-card:nth-child(2) { border-top: 3px solid #38a169; }
-.dashboard-card:nth-child(3) { border-top: 3px solid #e53e3e; }
-.dashboard-card:nth-child(4) { border-top: 3px solid #805ad5; }
+/* Card color accents via subtle dot */
+.dashboard-card .card-title::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.dashboard-card:nth-child(1) .card-title::before { background: #3182ce; box-shadow: 0 0 8px rgba(49, 130, 206, 0.4); }
+.dashboard-card:nth-child(2) .card-title::before { background: #38a169; box-shadow: 0 0 8px rgba(56, 161, 105, 0.4); }
+.dashboard-card:nth-child(3) .card-title::before { background: #e53e3e; box-shadow: 0 0 8px rgba(229, 62, 62, 0.4); }
+.dashboard-card:nth-child(4) .card-title::before { background: #805ad5; box-shadow: 0 0 8px rgba(128, 90, 213, 0.4); }
 
 /* ===== Form Card ===== */
 .form-card {

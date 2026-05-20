@@ -8,6 +8,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const stockRoutes = require("./routes/stockRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const { swaggerUi, swaggerSpec } = require("./swagger/swagger");
 
 const app = express();
 connectDB();
@@ -22,15 +23,13 @@ app.get("/api/health", (req, res) => {
   res.json({ message: "Inventory Management System API is running" });
 });
 
-const setupSwagger = require("./swagger/swagger");
-setupSwagger(app);
-
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/stock", stockRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

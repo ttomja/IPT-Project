@@ -6,28 +6,15 @@ const options = {
     info: {
       title: "Inventory Management System API",
       version: "1.0.0",
-      description: "API documentation for the Inventory Management System academic project",
+      description: "API documentation for the academic Inventory Management System",
     },
     servers: [
       {
         url: "http://localhost:5000/api",
-        description: "Local development server",
       },
     ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
   },
   apis: ["./routes/*.js"],
 };
 const swaggerSpec = swaggerJsdoc(options);
-function setupSwagger(app) {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-}
-module.exports = setupSwagger;
+module.exports = { swaggerUi, swaggerSpec };

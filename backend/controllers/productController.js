@@ -1,6 +1,5 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
-const { isZeroOrPositiveNumber } = require("../utils/validators");
 async function getProducts(req, res) {
   const { search, categoryId } = req.query;
   const filter = { status: "Active" };
@@ -41,8 +40,8 @@ async function createProduct(req, res) {
     if (!category) {
       return res.status(400).json({ message: "Selected category does not exist." });
     }
-    if (!isZeroOrPositiveNumber(quantityInStock) || !isZeroOrPositiveNumber(reorderLevel) || !isZeroOrPositiveNumber(price)) {
-      return res.status(400).json({ message: "Quantity, reorder level, and price must be valid non-negative numbers." });
+    if (Number(quantityInStock) < 0 || Number(reorderLevel) < 0 || Number(price) < 0) {
+      return res.status(400).json({ message: "Numeric values cannot be negative." });
     }
     const product = await Product.create({
       productCode: productCode.trim(),
@@ -74,14 +73,14 @@ async function updateProduct(req, res) {
         return res.status(400).json({ message: "Product code already exists." });
       }
     }
-    if (req.body.quantityInStock !== undefined && !isZeroOrPositiveNumber(req.body.quantityInStock)) {
-      return res.status(400).json({ message: "Quantity must be a valid non-negative number." });
+    if (req.body.quantityInStock !== undefined && Number(req.body.quantityInStock) < 0) {
+      return res.status(400).json({ message: "Numeric values cannot be negative." });
     }
-    if (req.body.reorderLevel !== undefined && !isZeroOrPositiveNumber(req.body.reorderLevel)) {
-      return res.status(400).json({ message: "Reorder level must be a valid non-negative number." });
+    if (req.body.reorderLevel !== undefined && Number(req.body.reorderLevel) < 0) {
+      return res.status(400).json({ message: "Numeric values cannot be negative." });
     }
-    if (req.body.price !== undefined && !isZeroOrPositiveNumber(req.body.price)) {
-      return res.status(400).json({ message: "Price must be a valid non-negative number." });
+    if (req.body.price !== undefined && Number(req.body.price) < 0) {
+      return res.status(400).json({ message: "Numeric values cannot be negative." });
     }
     Object.assign(product, req.body);
     const updatedProduct = await product.save();
