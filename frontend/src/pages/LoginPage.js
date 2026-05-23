@@ -12,6 +12,7 @@ function LoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showCredentials, setShowCredentials] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -83,11 +84,22 @@ function LoginPage() {
             {loading ? "Signing in..." : "Login"}
           </button>
         </form>
-        <div className="login-test-accounts">
-          <strong>Temporary Week 12 test accounts:</strong>
-          <p>Admin: admin / admin123</p>
-          <p>Staff: staff / staff123</p>
+        <div className="login-credentials-toggle">
+          <button 
+            type="button" 
+            className="toggle-credentials-btn" 
+            onClick={() => setShowCredentials(!showCredentials)}
+          >
+            {showCredentials ? "Hide System Credentials" : "Show System Credentials"}
+          </button>
         </div>
+        {showCredentials && (
+          <div className="login-test-accounts fade-in">
+            <strong>System Credentials:</strong>
+            <p>Admin: <code>admin</code> / <code>admin123</code></p>
+            <p>Staff: <code>staff</code> / <code>staff123</code></p>
+          </div>
+        )}
       </div>
     </div>
   );
