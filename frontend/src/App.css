@@ -91,6 +91,19 @@ body {
 .dashboard-card:nth-child(3) .card-title::before { background: #e53e3e; box-shadow: 0 0 8px rgba(229, 62, 62, 0.4); }
 .dashboard-card:nth-child(4) .card-title::before { background: #805ad5; box-shadow: 0 0 8px rgba(128, 90, 213, 0.4); }
 
+/* ===== Form Groups & Labels ===== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  margin-left: 2px;
+}
+
 /* ===== Form Card ===== */
 .form-card {
   background: #fff;
@@ -170,6 +183,16 @@ button:not(.logout-button):not(.btn-edit):not(.btn-danger):not(.btn-secondary):h
 }
 .btn-danger:hover {
   background: #fed7d7;
+}
+
+/* Success button (Activate) */
+.btn-success {
+  background: #f0fff4;
+  color: #2f855a;
+  border: 1px solid #9ae6b4;
+}
+.btn-success:hover {
+  background: #c6f6d5;
 }
 
 /* ===== Filter Row ===== */
@@ -303,4 +326,268 @@ button:not(.logout-button):not(.btn-edit):not(.btn-danger):not(.btn-secondary):h
   padding: 9px 12px;
   font-size: 14px;
   color: #2a4365;
+}
+
+/* ===== Dashboard Analytics Layout ===== */
+.analytics-section {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+@media (max-width: 1024px) {
+  .analytics-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analytics-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.analytics-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.section-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 4px 0 8px;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.analytics-empty {
+  color: #94a3b8;
+  font-size: 13px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.analytics-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Asset Valuation Block */
+.asset-valuation-block {
+  background: linear-gradient(135deg, #1f3b73 0%, #315ba3 100%);
+  border-radius: 12px;
+  padding: 22px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(31, 91, 163, 0.12);
+}
+
+.asset-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.asset-value {
+  font-size: 26px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.health-status {
+  text-align: right;
+}
+
+.health-percent {
+  font-size: 26px;
+  font-weight: 800;
+  color: #4ade80;
+}
+
+.health-label {
+  font-size: 10px;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Analytics Valuation Items */
+.valuation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.valuation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.valuation-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #334155;
+}
+
+.valuation-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.valuation-price-qty {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.valuation-total {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.valuation-bar-container {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.valuation-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #1f3b73, #3b82f6);
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+}
+
+/* Category Progress items */
+.category-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.category-progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.category-stats {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.category-bar-container {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.category-bar {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+}
+
+.category-progress-item:nth-child(1) .category-bar { background: #3182ce; }
+.category-progress-item:nth-child(2) .category-bar { background: #38a169; }
+.category-progress-item:nth-child(3) .category-bar { background: #e53e3e; }
+.category-progress-item:nth-child(4) .category-bar { background: #805ad5; }
+.category-progress-item:nth-child(5) .category-bar { background: #319795; }
+
+/* Live Activity timeline */
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 20px;
+  gap: 16px;
+}
+
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.timeline-item {
+  position: relative;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.timeline-dot.stock-in {
+  background: #38a169;
+  box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.15);
+}
+
+.timeline-dot.stock-out {
+  background: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+}
+
+.timeline-content {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.timeline-title {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.timeline-time {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+  font-weight: 500;
 }
