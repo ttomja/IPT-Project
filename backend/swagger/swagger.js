@@ -14,8 +14,22 @@ const options = {
         description: "Current Server"
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Enter your JWT token in the format: <token>"
+        }
+      }
+    }
   },
-  apis: [require("path").join(__dirname, "../routes/*.js")],
+  apis: [
+    require("path").join(__dirname, "../routes/*.js"),
+    require("path").join(__dirname, "../app.js")
+  ],
 };
 const swaggerSpec = swaggerJsdoc(options);
 module.exports = { swaggerUi, swaggerSpec };
+

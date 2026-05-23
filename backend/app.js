@@ -20,6 +20,18 @@ app.use(cors({
 }));
 app.use(express.json());
 
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Check backend and database status
+ *     tags: [System Status]
+ *     responses:
+ *       200:
+ *         description: System is active and database is connected. Returns registered users.
+ *       500:
+ *         description: Database connection failed
+ */
 app.get("/api/health", async (req, res) => {
   try {
     const User = require("./models/User");
