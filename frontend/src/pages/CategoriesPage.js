@@ -79,23 +79,28 @@ function CategoriesPage() {
       {loading && <LoadingMessage message="Loading categories..." />}
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
+      <>
+        {editingId && (
+          <div className="message loading-message" style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span><strong>Editing Mode:</strong> {form.categoryName}</span>
+            <button type="button" className="btn-edit" style={{ padding: '4px 10px' }} onClick={() => {
+              setEditingId(null);
+              setForm({ categoryName: "", description: "" });
+              setError("");
+              setSuccess("");
+            }}>Cancel</button>
+          </div>
+        )}
       <form className="form-card" onSubmit={handleSubmit}>
-        <input
-          name="categoryName"
-          placeholder="Category Name"
-          value={form.categoryName}
-          onChange={handleChange}
-        />
-        <input
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <button type="submit">
+        <div className="form-group"><label>Category Name</label>
+        <input name="categoryName" placeholder="e.g. Electronics" value={form.categoryName} onChange={handleChange} /></div>
+        <div className="form-group"><label>Description</label>
+        <input name="description" placeholder="Optional details" value={form.description} onChange={handleChange} /></div>
+        <button type="submit" style={{ height: '38px' }}>
           {editingId ? "Update Category" : "Add Category"}
         </button>
       </form>
+      </>
       {categories.length === 0 ? (
         <EmptyState message="No categories found." />
       ) : (

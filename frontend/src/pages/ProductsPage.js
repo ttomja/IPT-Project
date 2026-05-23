@@ -7,7 +7,7 @@ import LoadingMessage from "../components/LoadingMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
 import EmptyState from "../components/EmptyState";
-import { getCurrentUser } from "../services/authService";
+import { getUser } from "../utils/auth";
 
 function ProductsPage() {
   const [categories, setCategories] = useState([]);
@@ -18,7 +18,7 @@ function ProductsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const user = getCurrentUser();
+  const user = getUser();
   const isAdmin = user?.role === "Administrator" || user?.role === "Admin";
 
   const [form, setForm] = useState({
@@ -161,29 +161,46 @@ function ProductsPage() {
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
       {isAdmin && (
+      <>
+        {editingId && (
+          <div className="message loading-message" style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span><strong>Editing Mode:</strong> {form.productName || form.productCode}</span>
+            <button type="button" className="btn-edit" style={{ padding: '4px 10px' }} onClick={() => {
+              setEditingId(null);
+              setForm({
+                productCode: "", productName: "", categoryId: "", description: "",
+                unitOfMeasure: "", quantityInStock: 0, reorderLevel: 0, price: 0
+              });
+              setError("");
+              setSuccess("");
+            }}>Cancel</button>
+          </div>
+        )}
       <form className="form-card product-form" onSubmit={handleSubmit}>
-        <input name="productCode" placeholder="Product Code"
-          value={form.productCode} onChange={handleChange} />
-        <input name="productName" placeholder="Product Name"
-          value={form.productName} onChange={handleChange} />
+        <div className="form-group"><label>Product Code</label>
+        <input name="productCode" placeholder="e.g. P-001" value={form.productCode} onChange={handleChange} /></div>
+        <div className="form-group"><label>Product Name</label>
+        <input name="productName" placeholder="e.g. Dog Food" value={form.productName} onChange={handleChange} /></div>
+        <div className="form-group"><label>Category</label>
         <select name="categoryId" value={form.categoryId} onChange={handleChange}>
           <option value="">Select Category</option>
           {categories.map((category) => (
-            <option key={category.id}
-              value={category.id}>{category.categoryName}</option>
+            <option key={category._id} value={category._id}>{category.categoryName}</option>
           ))}
-        </select>
-        <input name="description" placeholder="Description"
-          value={form.description} onChange={handleChange} />
-        <input name="unitOfMeasure" placeholder="Unit of Measure"
-          value={form.unitOfMeasure} onChange={handleChange} />
-        <input name="quantityInStock" type="number" placeholder="Quantity"
-          value={form.quantityInStock} onChange={handleChange} />
-        <input name="reorderLevel" type="number" placeholder="Reorder Level"
-          value={form.reorderLevel} onChange={handleChange} />
-        <input name="price" type="number" placeholder="Price" value={form.price} onChange={handleChange} />
-        <button type="submit">{editingId ? "Update Product" : "Add Product"}</button>
+        </select></div>
+        <div className="form-group"><label>Description</label>
+        <input name="description" placeholder="Optional details" value={form.description} onChange={handleChange} /></div>
+        <div className="form-group"><label>Unit of Measure</label>
+        <input name="unitOfMeasure" placeholder="e.g. Box, Kg" value={form.unitOfMeasure} onChange={handleChange} /></div>
+        <div className="form-group"><label>Quantity</label>
+        <input name="quantityInStock" type="number" placeholder="0" value={form.quantityInStock} onChange={handleChange} /></div>
+        <div className="form-group"><label>Reorder Level</label>
+        <input name="reorderLevel" type="number" placeholder="0" value={form.reorderLevel} onChange={handleChange} /></div>
+        <div className="form-group"><label>Price</label>
+        <input name="price" type="number" placeholder="0" value={form.price} onChange={handleChange} /></div>
+        <button type="submit" style={{ height: '38px' }}>{editingId ? "Update Product" : "Add Product"}</button>
       </form>
+      </>
       )}
       <div className="filter-row">
         <input placeholder="Search by product name or code" value={search}
@@ -219,7 +236,7 @@ function ProductsPage() {
             return (
               <tr key={product._id}>
                 <td>{product.productCode}</td>
-                <td>{product.productName}</td>
+                <td title={product.description}>{product.productName}</td>
                 <td>{getCategoryName(product.categoryId)}</td>
                 <td>{product.quantityInStock}</td>
                 <td>{product.reorderLevel}</td>

@@ -68,6 +68,7 @@ function StockInPage() {
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
       <form className="form-card" onSubmit={handleSubmit}>
+        <div className="form-group"><label>Product</label>
         <select name="productId" value={form.productId} onChange={handleChange}>
           <option value="">Select Product</option>
           {products.map((product) => (
@@ -75,22 +76,12 @@ function StockInPage() {
               {product.productCode} - {product.productName}
             </option>
           ))}
-        </select>
-        <input
-          name="quantity"
-          type="number"
-          min="1"
-          placeholder="Quantity to add"
-          value={form.quantity}
-          onChange={handleChange}
-        />
-        <input
-          name="remarks"
-          placeholder="Remarks"
-          value={form.remarks}
-          onChange={handleChange}
-        />
-        <button type="submit" disabled={saving}>
+        </select></div>
+        <div className="form-group"><label>Quantity</label>
+        <input name="quantity" type="number" min="1" placeholder="Quantity to add" value={form.quantity} onChange={handleChange} /></div>
+        <div className="form-group"><label>Remarks</label>
+        <input name="remarks" placeholder="Optional remarks" value={form.remarks} onChange={handleChange} /></div>
+        <button type="submit" disabled={saving} style={{ height: '38px' }}>
           {saving ? "Saving..." : "Record Stock-In"}
         </button>
       </form>

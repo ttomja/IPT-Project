@@ -74,6 +74,7 @@ function StockOutPage() {
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
       <form className="form-card" onSubmit={handleSubmit}>
+        <div className="form-group"><label>Product</label>
         <select name="productId" value={form.productId} onChange={handleChange}>
           <option value="">Select Product</option>
           {products.map((product) => (
@@ -81,25 +82,16 @@ function StockOutPage() {
               {product.productCode} - {product.productName}
             </option>
           ))}
-        </select>
+        </select></div>
+        <div className="form-group"><label>&nbsp;</label>
         <div className="stock-note">
           Available Stock: <strong>{availableQuantity}</strong>
-        </div>
-        <input
-          name="quantity"
-          type="number"
-          min="1"
-          placeholder="Quantity to remove"
-          value={form.quantity}
-          onChange={handleChange}
-        />
-        <input
-          name="remarks"
-          placeholder="Remarks"
-          value={form.remarks}
-          onChange={handleChange}
-        />
-        <button type="submit" disabled={saving}>
+        </div></div>
+        <div className="form-group"><label>Quantity</label>
+        <input name="quantity" type="number" min="1" placeholder="Quantity to remove" value={form.quantity} onChange={handleChange} /></div>
+        <div className="form-group"><label>Remarks</label>
+        <input name="remarks" placeholder="Optional remarks" value={form.remarks} onChange={handleChange} /></div>
+        <button type="submit" disabled={saving} style={{ height: '38px' }}>
           {saving ? "Saving..." : "Record Stock-Out"}
         </button>
       </form>

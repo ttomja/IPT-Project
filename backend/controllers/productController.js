@@ -86,6 +86,7 @@ async function updateProduct(req, res) {
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } catch (error) {
+    console.error("Update Error:", error);
     res.status(500).json({ message: "Unable to update product.", error: error.message });
   }
 }

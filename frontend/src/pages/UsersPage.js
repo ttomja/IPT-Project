@@ -90,6 +90,22 @@ function UsersPage() {
       setLoading(false);
     }
   }
+
+  async function handleActivate(id) {
+    if (!window.confirm("Are you sure you want to activate this user?")) return;
+    try {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+      await updateUser(id, { status: "Active" });
+      setSuccess("User activated.");
+      await loadUsers();
+    } catch (err) {
+      setError(err.friendlyMessage || "Unable to activate user.");
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div>
       <PageHeader
@@ -99,32 +115,35 @@ function UsersPage() {
       {loading && <LoadingMessage message="Loading users..." />}
       {error && <ErrorMessage message={error} />}
       {success && <SuccessMessage message={success} />}
+      <>
+        {editingId && (
+          <div className="message loading-message" style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span><strong>Editing Mode:</strong> {form.fullName || form.username}</span>
+            <button type="button" className="btn-edit" style={{ padding: '4px 10px' }} onClick={() => {
+              setEditingId(null);
+              setForm({
+                fullName: "", username: "", password: "", role: "Staff"
+              });
+              setError("");
+              setSuccess("");
+            }}>Cancel</button>
+          </div>
+        )}
       <form className="form-card" onSubmit={handleSubmit}>
-        <input
-          name="fullName"
-          placeholder="Full Name"
-          value={form.fullName}
-          onChange={handleChange}
-        />
-        <input
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-        />
+        <div className="form-group"><label>Full Name</label>
+        <input name="fullName" placeholder="e.g. John Doe" value={form.fullName} onChange={handleChange} /></div>
+        <div className="form-group"><label>Username</label>
+        <input name="username" placeholder="e.g. jdoe" value={form.username} onChange={handleChange} /></div>
+        <div className="form-group"><label>Password</label>
+        <input name="password" type="password" placeholder="(Leave blank to keep current)" value={form.password} onChange={handleChange} /></div>
+        <div className="form-group"><label>Role</label>
         <select name="role" value={form.role} onChange={handleChange}>
           <option value="Staff">Staff</option>
           <option value="Administrator">Administrator</option>
-        </select>
-        <button type="submit">{editingId ? "Update User" : "Add User"}</button>
+        </select></div>
+        <button type="submit" style={{ height: '38px' }}>{editingId ? "Update User" : "Add User"}</button>
       </form>
+      </>
       {users.length === 0 ? (
         <EmptyState message="No users found." />
       ) : (
@@ -147,8 +166,10 @@ function UsersPage() {
                 <td><StatusBadge status={user.status} /></td>
                 <td>
                   <button className="btn-edit" onClick={() => handleEdit(user)}>Edit</button>
-                  {user.status === "Active" && (
+                  {user.status === "Active" ? (
                     <button className="btn-danger" onClick={() => handleDeactivate(user._id)}>Deactivate</button>
+                  ) : (
+                    <button className="btn-success" onClick={() => handleActivate(user._id)}>Activate</button>
                   )}
                 </td>
               </tr>
