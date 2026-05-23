@@ -60,7 +60,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Placeholders */}
         <Route path="/stock-in" element={<ProtectedRoute><MainLayout><StockInPage /></MainLayout></ProtectedRoute>} />
         <Route path="/stock-out" element={<ProtectedRoute><MainLayout><StockOutPage /></MainLayout></ProtectedRoute>} />
         <Route path="/transactions" element={<ProtectedRoute><MainLayout><TransactionsPage /></MainLayout></ProtectedRoute>} />

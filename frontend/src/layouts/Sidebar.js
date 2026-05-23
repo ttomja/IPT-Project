@@ -2,7 +2,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getUser, logout } from "../utils/auth";
 import "../styles/layout.css";
 
-/* Minimal inline SVG icons – clean, consistent stroke style */
 const icons = {
   dashboard: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -96,7 +95,6 @@ function Sidebar() {
 
   return (
     <aside className="sidebar">
-      {/* Brand */}
       <div className="sidebar-brand">
         <svg className="sidebar-brand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -106,7 +104,6 @@ function Sidebar() {
         <span className="sidebar-brand-text">IMS</span>
       </div>
 
-      {/* User Info */}
       <div className="sidebar-profile">
         <div className="sidebar-avatar">
           {user?.fullName?.charAt(0).toUpperCase() || "U"}
@@ -119,7 +116,6 @@ function Sidebar() {
 
       <div className="sidebar-divider" />
 
-      {/* Navigation */}
       <nav className="sidebar-nav">
         <span className="sidebar-section-label">Main</span>
         <NavLink to="/dashboard" icon={icons.dashboard} label="Dashboard" />
@@ -142,7 +138,6 @@ function Sidebar() {
         <NavLink to="/reports" icon={icons.reports} label="Reports" />
       </nav>
 
-      {/* Logout */}
       <div className="sidebar-footer">
         <button className="logout-button" onClick={handleLogout}>
           {icons.logout}
